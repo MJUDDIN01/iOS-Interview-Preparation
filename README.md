@@ -12,3 +12,4 @@ A structured repository for rebuilding my iOS development skills.
 - Testing 
 - Architecture 
 - Interview preparation
+- Job application
