@@ -1,16 +1,16 @@
-# Mission 013 — Actors, MainActor, Isolation and Sendable
+# Mission 008 — Error Handling and Failure Design
 
 ## Why this topic matters
 
-Concurrent code can read and write the same state at the same time. Actors protect mutable state, while `MainActor` keeps UI work safe.
+Production apps fail. Networks time out, tokens expire and data can be invalid. Good error design makes failures understandable and recoverable.
 
 ## Learning objectives
 
-- Actor isolation
-- MainActor
-- Sendable
-- Data races
-- Reentrancy
+- throw and throws
+- do-catch
+- Result
+- Custom errors
+- Recovery
 
 ## The five questions to ask
 
@@ -23,27 +23,20 @@ Concurrent code can read and write the same state at the same time. Actors prote
 ## Swift example
 
 ```swift
-actor AccountStore {
-    private var balance: Decimal = 0
-
-    func deposit(_ amount: Decimal) {
-        balance += amount
-    }
-
-    func currentBalance() -> Decimal {
-        balance
-    }
+enum TransferError: Error {
+    case insufficientFunds
+    case invalidAmount
 }
 
-@MainActor
-final class AccountViewModel {
-    private(set) var displayedBalance: Decimal = 0
+func validateTransfer(amount: Decimal, balance: Decimal) throws {
+    guard amount > 0 else { throw TransferError.invalidAmount }
+    guard amount <= balance else { throw TransferError.insufficientFunds }
 }
 ```
 
 ## Coding exercise
 
-Create an actor-backed account store and call it from a `@MainActor` view model.
+Create typed login errors and a user-friendly message for each.
 
 ## Testing task
 
@@ -55,13 +48,12 @@ Explain where this topic belongs in MVC, MVVM or Clean Architecture. Focus on re
 
 ## Enterprise Banking App task
 
-Move shared account state into an actor and keep UI state on `MainActor`.
+Separate transfer validation, authentication and network failures.
 
 ## Interview practice
 
-- What problem do actors solve?
-- What does `Sendable` communicate?
-- What is actor reentrancy?
+- When would you use `throws` instead of `Result`?
+- How should domain errors differ from network errors?
 
 ## Engineering journal
 

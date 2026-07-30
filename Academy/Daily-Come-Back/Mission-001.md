@@ -1,16 +1,14 @@
-# Mission 013 — Actors, MainActor, Isolation and Sendable
+# Mission 001 — Engineering Mindset and How iOS Applications Work
 
 ## Why this topic matters
 
-Concurrent code can read and write the same state at the same time. Actors protect mutable state, while `MainActor` keeps UI work safe.
+Strong engineers do not only memorise syntax. They understand how user actions travel through views, state, business logic, networking and storage. This helps you debug faster and make better design decisions.
 
 ## Learning objectives
 
-- Actor isolation
-- MainActor
-- Sendable
-- Data races
-- Reentrancy
+- What an iOS app is made of
+- Inputs, state, logic and outputs
+- App flow at a high level
 
 ## The five questions to ask
 
@@ -23,27 +21,23 @@ Concurrent code can read and write the same state at the same time. Actors prote
 ## Swift example
 
 ```swift
-actor AccountStore {
-    private var balance: Decimal = 0
+struct Account {
+    let name: String
+    var balance: Decimal
 
-    func deposit(_ amount: Decimal) {
+    mutating func deposit(_ amount: Decimal) {
         balance += amount
     }
-
-    func currentBalance() -> Decimal {
-        balance
-    }
 }
 
-@MainActor
-final class AccountViewModel {
-    private(set) var displayedBalance: Decimal = 0
-}
+var account = Account(name: "Current Account", balance: 100)
+account.deposit(50)
+print(account.balance)
 ```
 
 ## Coding exercise
 
-Create an actor-backed account store and call it from a `@MainActor` view model.
+Write a `SavingsGoal` type with a target, current amount and a method that adds money.
 
 ## Testing task
 
@@ -55,13 +49,12 @@ Explain where this topic belongs in MVC, MVVM or Clean Architecture. Focus on re
 
 ## Enterprise Banking App task
 
-Move shared account state into an actor and keep UI state on `MainActor`.
+Describe how a tap on “Transfer” moves through validation, business logic and UI updates.
 
 ## Interview practice
 
-- What problem do actors solve?
-- What does `Sendable` communicate?
-- What is actor reentrancy?
+- How would you explain the flow of data through an iOS app?
+- What is the difference between syntax knowledge and engineering judgement?
 
 ## Engineering journal
 

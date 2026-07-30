@@ -1,16 +1,15 @@
-# Mission 013 — Actors, MainActor, Isolation and Sendable
+# Mission 002 — Value Types, Reference Types and Memory
 
 ## Why this topic matters
 
-Concurrent code can read and write the same state at the same time. Actors protect mutable state, while `MainActor` keeps UI work safe.
+Choosing between structs and classes affects correctness, testability and shared state. Many subtle bugs come from unexpected mutation or shared references.
 
 ## Learning objectives
 
-- Actor isolation
-- MainActor
-- Sendable
-- Data races
-- Reentrancy
+- Structs and classes
+- Copy semantics
+- Reference semantics
+- Identity
 
 ## The five questions to ask
 
@@ -23,27 +22,21 @@ Concurrent code can read and write the same state at the same time. Actors prote
 ## Swift example
 
 ```swift
-actor AccountStore {
-    private var balance: Decimal = 0
-
-    func deposit(_ amount: Decimal) {
-        balance += amount
-    }
-
-    func currentBalance() -> Decimal {
-        balance
-    }
+struct Profile {
+    var name: String
 }
 
-@MainActor
-final class AccountViewModel {
-    private(set) var displayedBalance: Decimal = 0
-}
+var first = Profile(name: "MJ")
+var second = first
+second.name = "Jasim"
+
+print(first.name)
+print(second.name)
 ```
 
 ## Coding exercise
 
-Create an actor-backed account store and call it from a `@MainActor` view model.
+Create one struct and one class, copy each, mutate the copy and compare the behaviour.
 
 ## Testing task
 
@@ -55,13 +48,12 @@ Explain where this topic belongs in MVC, MVVM or Clean Architecture. Focus on re
 
 ## Enterprise Banking App task
 
-Move shared account state into an actor and keep UI state on `MainActor`.
+Model `Transaction` as a struct and explain why value semantics are useful.
 
 ## Interview practice
 
-- What problem do actors solve?
-- What does `Sendable` communicate?
-- What is actor reentrancy?
+- When would you choose a struct over a class?
+- What does value semantics mean in Swift?
 
 ## Engineering journal
 

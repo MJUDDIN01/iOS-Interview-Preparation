@@ -1,16 +1,15 @@
-# Mission 013 — Actors, MainActor, Isolation and Sendable
+# Mission 007 — Generics and Reusable Type-Safe Code
 
 ## Why this topic matters
 
-Concurrent code can read and write the same state at the same time. Actors protect mutable state, while `MainActor` keeps UI work safe.
+Generics let you reuse logic without losing type safety. They reduce duplication while keeping compile-time guarantees.
 
 ## Learning objectives
 
-- Actor isolation
-- MainActor
-- Sendable
-- Data races
-- Reentrancy
+- Generic functions
+- Generic types
+- Constraints
+- Associated types
 
 ## The five questions to ask
 
@@ -23,27 +22,18 @@ Concurrent code can read and write the same state at the same time. Actors prote
 ## Swift example
 
 ```swift
-actor AccountStore {
-    private var balance: Decimal = 0
-
-    func deposit(_ amount: Decimal) {
-        balance += amount
-    }
-
-    func currentBalance() -> Decimal {
-        balance
-    }
+struct APIResponse<Value> {
+    let value: Value
+    let statusCode: Int
 }
 
-@MainActor
-final class AccountViewModel {
-    private(set) var displayedBalance: Decimal = 0
-}
+let balanceResponse = APIResponse(value: Decimal(900), statusCode: 200)
+let nameResponse = APIResponse(value: "MJ", statusCode: 200)
 ```
 
 ## Coding exercise
 
-Create an actor-backed account store and call it from a `@MainActor` view model.
+Build a generic `ResultBox<Value>` with success and error states.
 
 ## Testing task
 
@@ -55,13 +45,12 @@ Explain where this topic belongs in MVC, MVVM or Clean Architecture. Focus on re
 
 ## Enterprise Banking App task
 
-Move shared account state into an actor and keep UI state on `MainActor`.
+Model account and transaction API responses generically.
 
 ## Interview practice
 
-- What problem do actors solve?
-- What does `Sendable` communicate?
-- What is actor reentrancy?
+- Why are generics better than `Any`?
+- What is a generic constraint?
 
 ## Engineering journal
 

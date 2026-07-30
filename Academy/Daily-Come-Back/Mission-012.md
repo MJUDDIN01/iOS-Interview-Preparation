@@ -1,16 +1,16 @@
-# Mission 013 — Actors, MainActor, Isolation and Sendable
+# Mission 012 — Tasks, async let and Concurrent Work
 
 ## Why this topic matters
 
-Concurrent code can read and write the same state at the same time. Actors protect mutable state, while `MainActor` keeps UI work safe.
+Independent work can run concurrently and finish faster, but unmanaged concurrency creates complexity. Structured tasks keep work cancellable and understandable.
 
 ## Learning objectives
 
-- Actor isolation
-- MainActor
-- Sendable
-- Data races
-- Reentrancy
+- Task lifecycle
+- async let
+- Task groups
+- Cancellation
+- Priority
 
 ## The five questions to ask
 
@@ -23,27 +23,16 @@ Concurrent code can read and write the same state at the same time. Actors prote
 ## Swift example
 
 ```swift
-actor AccountStore {
-    private var balance: Decimal = 0
-
-    func deposit(_ amount: Decimal) {
-        balance += amount
-    }
-
-    func currentBalance() -> Decimal {
-        balance
-    }
-}
-
-@MainActor
-final class AccountViewModel {
-    private(set) var displayedBalance: Decimal = 0
+func loadDashboard() async throws -> (Decimal, [String]) {
+    async let balance = MockBalanceService().fetchBalance()
+    async let transactions = ["Salary", "Rent", "Groceries"]
+    return try await (balance, transactions)
 }
 ```
 
 ## Coding exercise
 
-Create an actor-backed account store and call it from a `@MainActor` view model.
+Load profile, accounts and transactions concurrently using `async let`.
 
 ## Testing task
 
@@ -55,13 +44,12 @@ Explain where this topic belongs in MVC, MVVM or Clean Architecture. Focus on re
 
 ## Enterprise Banking App task
 
-Move shared account state into an actor and keep UI state on `MainActor`.
+Load dashboard sections concurrently while preserving cancellation.
 
 ## Interview practice
 
-- What problem do actors solve?
-- What does `Sendable` communicate?
-- What is actor reentrancy?
+- When should work run concurrently?
+- What benefits do task groups provide?
 
 ## Engineering journal
 

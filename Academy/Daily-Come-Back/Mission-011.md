@@ -1,16 +1,16 @@
-# Mission 013 — Actors, MainActor, Isolation and Sendable
+# Mission 011 — Asynchronous Programming with async/await
 
 ## Why this topic matters
 
-Concurrent code can read and write the same state at the same time. Actors protect mutable state, while `MainActor` keeps UI work safe.
+Apps wait for networks, databases and system APIs without freezing the interface. `async/await` makes this easier to read and reason about.
 
 ## Learning objectives
 
-- Actor isolation
-- MainActor
-- Sendable
-- Data races
-- Reentrancy
+- async functions
+- await
+- Task
+- Cancellation
+- Structured concurrency
 
 ## The five questions to ask
 
@@ -23,27 +23,19 @@ Concurrent code can read and write the same state at the same time. Actors prote
 ## Swift example
 
 ```swift
-actor AccountStore {
-    private var balance: Decimal = 0
-
-    func deposit(_ amount: Decimal) {
-        balance += amount
+func loadBalance() async {
+    do {
+        let balance = try await MockBalanceService().fetchBalance()
+        print(balance)
+    } catch {
+        print(error)
     }
-
-    func currentBalance() -> Decimal {
-        balance
-    }
-}
-
-@MainActor
-final class AccountViewModel {
-    private(set) var displayedBalance: Decimal = 0
 }
 ```
 
 ## Coding exercise
 
-Create an actor-backed account store and call it from a `@MainActor` view model.
+Create an async function that loads transactions and handles cancellation.
 
 ## Testing task
 
@@ -55,13 +47,12 @@ Explain where this topic belongs in MVC, MVVM or Clean Architecture. Focus on re
 
 ## Enterprise Banking App task
 
-Move shared account state into an actor and keep UI state on `MainActor`.
+Convert one callback-based service into `async throws`.
 
 ## Interview practice
 
-- What problem do actors solve?
-- What does `Sendable` communicate?
-- What is actor reentrancy?
+- What does `await` do?
+- How does structured concurrency differ from callbacks?
 
 ## Engineering journal
 

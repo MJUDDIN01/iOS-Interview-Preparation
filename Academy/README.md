@@ -1,34 +1,11 @@
 # Senior iOS Engineering Academy
 
-Welcome to your Academy workspace.
+The academy follows one rule:
 
-## Folders
-- Curriculum
-- Daily Come Back
+> Do not only learn what a feature does. Learn why it exists, what problem it solves, where it belongs and what trade-offs it introduces.
 
-Start here:
-- Curriculum/Mission-Index.md
-- Curriculum/Progress-Tracker.md
+## Start here
 
-# Senior iOS Engineering Academy
-
-Structured daily preparation for reaching a Senior iOS Developer role by December 2026.
-
-## Continue Learning
-
-- [Current Mission: Mission 013](Daily-Come-Back/Mission-013.md)
 - [Mission Index](Curriculum/Mission-Index.md)
 - [Progress Tracker](Curriculum/Progress-Tracker.md)
-
-## Main Sections
-
-- [Daily Come Back](Daily-Come-Back/README.md)
-- [Curriculum](Curriculum/)
-- [Engineering Journal](Engineering-Journal/)
-- [Weekly Reviews](Weekly-Reviews/)
-- [Mock Interviews](Mock-Interviews/)
-- [Resources](Resources/)
-
-## Capstone
-
-- [Enterprise Banking App](../Enterprise-Banking-App/)
+- [Current Mission](Daily-Come-Back/Mission-013.md)

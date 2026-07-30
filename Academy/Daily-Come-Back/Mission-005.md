@@ -1,16 +1,15 @@
-# Mission 013 — Actors, MainActor, Isolation and Sendable
+# Mission 005 — Capture Lists and Escaping Closures
 
 ## Why this topic matters
 
-Concurrent code can read and write the same state at the same time. Actors protect mutable state, while `MainActor` keeps UI work safe.
+Closures can outlive the function that created them. If they capture `self` strongly, they can keep objects alive forever.
 
 ## Learning objectives
 
-- Actor isolation
-- MainActor
-- Sendable
-- Data races
-- Reentrancy
+- Escaping vs non-escaping
+- Capture lists
+- weak self
+- Stored closures
 
 ## The five questions to ask
 
@@ -23,27 +22,25 @@ Concurrent code can read and write the same state at the same time. Actors prote
 ## Swift example
 
 ```swift
-actor AccountStore {
-    private var balance: Decimal = 0
+final class TransferViewModel {
+    var onSuccess: (() -> Void)?
 
-    func deposit(_ amount: Decimal) {
-        balance += amount
+    func configureCallback() {
+        onSuccess = { [weak self] in
+            guard let self else { return }
+            self.showConfirmation()
+        }
     }
 
-    func currentBalance() -> Decimal {
-        balance
+    private func showConfirmation() {
+        print("Transfer complete")
     }
-}
-
-@MainActor
-final class AccountViewModel {
-    private(set) var displayedBalance: Decimal = 0
 }
 ```
 
 ## Coding exercise
 
-Create an actor-backed account store and call it from a `@MainActor` view model.
+Create a stored callback and use `[weak self]` safely.
 
 ## Testing task
 
@@ -55,13 +52,12 @@ Explain where this topic belongs in MVC, MVVM or Clean Architecture. Focus on re
 
 ## Enterprise Banking App task
 
-Move shared account state into an actor and keep UI state on `MainActor`.
+Audit stored completion handlers and document where `[weak self]` is needed.
 
 ## Interview practice
 
-- What problem do actors solve?
-- What does `Sendable` communicate?
-- What is actor reentrancy?
+- Why do escaping closures often need capture lists?
+- What happens when `self` is captured strongly?
 
 ## Engineering journal
 

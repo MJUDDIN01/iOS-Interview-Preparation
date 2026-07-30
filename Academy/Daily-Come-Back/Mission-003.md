@@ -1,16 +1,16 @@
-# Mission 013 — Actors, MainActor, Isolation and Sendable
+# Mission 003 — Automatic Reference Counting
 
 ## Why this topic matters
 
-Concurrent code can read and write the same state at the same time. Actors protect mutable state, while `MainActor` keeps UI work safe.
+ARC manages memory for classes, but it cannot always detect ownership cycles. Understanding ARC helps prevent leaks, retained screens and poor performance.
 
 ## Learning objectives
 
-- Actor isolation
-- MainActor
-- Sendable
-- Data races
-- Reentrancy
+- Strong references
+- Weak references
+- Unowned references
+- Retain cycles
+- deinit
 
 ## The five questions to ask
 
@@ -23,27 +23,27 @@ Concurrent code can read and write the same state at the same time. Actors prote
 ## Swift example
 
 ```swift
-actor AccountStore {
-    private var balance: Decimal = 0
+final class Customer {
+    let name: String
+    weak var account: BankAccount?
 
-    func deposit(_ amount: Decimal) {
-        balance += amount
+    init(name: String) {
+        self.name = name
     }
 
-    func currentBalance() -> Decimal {
-        balance
+    deinit {
+        print("Customer released")
     }
 }
 
-@MainActor
-final class AccountViewModel {
-    private(set) var displayedBalance: Decimal = 0
+final class BankAccount {
+    weak var owner: Customer?
 }
 ```
 
 ## Coding exercise
 
-Create an actor-backed account store and call it from a `@MainActor` view model.
+Build two classes that reference each other, then fix the cycle using `weak`.
 
 ## Testing task
 
@@ -55,13 +55,12 @@ Explain where this topic belongs in MVC, MVVM or Clean Architecture. Focus on re
 
 ## Enterprise Banking App task
 
-Move shared account state into an actor and keep UI state on `MainActor`.
+Review delegates, coordinators and stored closures for possible retain cycles.
 
 ## Interview practice
 
-- What problem do actors solve?
-- What does `Sendable` communicate?
-- What is actor reentrancy?
+- What is a retain cycle?
+- When should `weak` be used instead of `unowned`?
 
 ## Engineering journal
 

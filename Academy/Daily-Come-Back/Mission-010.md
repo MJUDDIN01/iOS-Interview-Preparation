@@ -1,16 +1,15 @@
-# Mission 013 — Actors, MainActor, Isolation and Sendable
+# Mission 010 — Unit Testing Fundamentals
 
 ## Why this topic matters
 
-Concurrent code can read and write the same state at the same time. Actors protect mutable state, while `MainActor` keeps UI work safe.
+Tests protect behaviour while code changes. They help you refactor confidently and catch regressions before users do.
 
 ## Learning objectives
 
-- Actor isolation
-- MainActor
-- Sendable
-- Data races
-- Reentrancy
+- Arrange, Act, Assert
+- Test naming
+- Deterministic tests
+- Edge cases
 
 ## The five questions to ask
 
@@ -23,27 +22,20 @@ Concurrent code can read and write the same state at the same time. Actors prote
 ## Swift example
 
 ```swift
-actor AccountStore {
-    private var balance: Decimal = 0
+import XCTest
 
-    func deposit(_ amount: Decimal) {
-        balance += amount
+final class TransferValidatorTests: XCTestCase {
+    func test_validateTransfer_whenAmountExceedsBalance_throwsError() {
+        XCTAssertThrowsError(
+            try validateTransfer(amount: 200, balance: 100)
+        )
     }
-
-    func currentBalance() -> Decimal {
-        balance
-    }
-}
-
-@MainActor
-final class AccountViewModel {
-    private(set) var displayedBalance: Decimal = 0
 }
 ```
 
 ## Coding exercise
 
-Create an actor-backed account store and call it from a `@MainActor` view model.
+Test valid, zero, negative and insufficient-funds cases.
 
 ## Testing task
 
@@ -55,13 +47,12 @@ Explain where this topic belongs in MVC, MVVM or Clean Architecture. Focus on re
 
 ## Enterprise Banking App task
 
-Move shared account state into an actor and keep UI state on `MainActor`.
+Add tests for transfer validation and balance formatting.
 
 ## Interview practice
 
-- What problem do actors solve?
-- What does `Sendable` communicate?
-- What is actor reentrancy?
+- What makes a unit test valuable?
+- What should not be mocked?
 
 ## Engineering journal
 
